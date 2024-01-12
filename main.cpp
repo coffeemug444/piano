@@ -181,7 +181,7 @@ void updateKeyColors()
 
 void init_display()
 {
-   const char* input_str = "Q2W3ER5T6Y7UI9O0P[]=]";
+   const char* input_str = "Q2W3ER5T6Y7UI9O0P[=]";
    font.loadFromFile("Rubik-Regular.ttf");
 
    const float white_w = static_cast<float>(screen_w) / static_cast<float>(num_white_keys);
