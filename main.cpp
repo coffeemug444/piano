@@ -18,6 +18,9 @@ const int num_keys = 20;
 const int num_white_keys = 12;
 bool keys[num_keys] {false};
 
+sf::Font font;
+sf::Text labels[num_keys];
+
 const int screen_w = 200;
 const int screen_h = 70;
 
@@ -178,6 +181,9 @@ void updateKeyColors()
 
 void init_display()
 {
+   const char* input_str = "Q2W3ER5T6Y7UI9O0P[]=]";
+   font.loadFromFile("Rubik-Regular.ttf");
+
    const float white_w = static_cast<float>(screen_w) / static_cast<float>(num_white_keys);
    const float white_h = screen_h;
 
@@ -198,15 +204,29 @@ void init_display()
       key.setSize({w,h});
       key.setPosition({xoffset, 0.f});
 
+      sf::Text& label = labels[i];
+      label.setFont(font);
+      label.setCharacterSize(12);
+      label.setString(std::string(1, input_str[i]));
+      label.setPosition({xoffset, 0.f});
+
+      float label_w = label.getGlobalBounds().width;
+
       if (white)
       {
          xoffset += white_w;
          key.setFillColor(sf::Color::White);
+
+         label.move({(white_w-label_w)/2.f, white_h - 18.f});
+         label.setFillColor(sf::Color::Black);
       }
       else
       {
          key.move({-black_w/2.f, 0.f});
          key.setFillColor(sf::Color::Black);
+
+         label.move({-label_w/2.f, black_h - 18.f});
+         label.setFillColor(sf::Color::White);
       }
    }
 
@@ -252,6 +272,10 @@ int main()
       for (int i = num_white_keys; i < num_keys; i++)
       {
          window.draw(keys_display[i]);
+      }
+      for (int i = 0; i < num_keys; i++)
+      {
+         window.draw(labels[i]);
       }
 
       window.display();
