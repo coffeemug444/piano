@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <map>
+#include <ranges>
 #include <algorithm>
 
 
@@ -140,9 +141,25 @@ void updateSoundBuffer()
       int steps_above_440 = key + 3;
       double freq = 440.0 * std::pow(scaling_factor, steps_above_440);
 
-      for (int sample = 0; sample < num_samples; sample++)
+      for (int harmonic = 1; harmonic <= 5; harmonic++)
       {
-         raw_samples[sample] += volume * std::sin((sample * freq * 2 * M_PI) / sample_rate);
+         std::vector<double> harmonic_samples;
+         int num_harmonic_samples = (sample_rate/freq);
+         harmonic_samples.reserve(num_harmonic_samples);
+         for (int sample = 0; sample < num_harmonic_samples; sample++)
+         {
+            harmonic_samples.push_back(volume * std::sin((sample * harmonic * freq * 2 * M_PI) / sample_rate) / (4*harmonic-3));
+         }
+
+         for (int i = 0; i < num_samples; i+= num_harmonic_samples)
+         {
+            std::transform(
+               raw_samples + i, raw_samples + std::min(i + num_harmonic_samples, num_samples),
+               harmonic_samples.data(),
+               raw_samples + i,
+               std::plus<>()
+            );
+         }
       }
    }
 
