@@ -99,6 +99,11 @@ void pollEvents(sf::RenderWindow& window) {
          break;
       case sf::Event::KeyPressed:
       {
+         if (event.key.code == sf::Keyboard::Escape)
+         {
+            window.close();
+            break;
+         }
          if (!isPianoKey(event.key.code)) break;
          int idx = keymap.at(event.key.code);
          if (!keys[idx])
